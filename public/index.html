@@ -136,23 +136,9 @@
       text-decoration: none;
     }
     
-    .header-logo-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--sti-gold) 0%, #C49415 100%);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: bold;
-      color: var(--sti-white);
-    }
-    
-    .header-logo-text {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--sti-dark);
+    .header-logo-img {
+      height: 50px;
+      width: auto;
     }
     
     /* Main Page Styles */
@@ -387,7 +373,16 @@
 <body>
   <!-- LOGIN PAGE -->
   <div id="loginPage" class="login-wrapper">
-    <div class="login-card">
+    <!-- Top Header -->
+    <header class="top-header" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+      <div class="top-header-content">
+        <a href="#" class="header-logo">
+          <img src="https://i.imgur.com/x1SR87D.png" alt="STI Logo" class="header-logo-img">
+        </a>
+      </div>
+    </header>
+    
+    <div class="login-card" style="margin-top: 80px;">
       <div class="logo">🗳️</div>
       <h2>VoteNow</h2>
       <p class="subtitle">Student Council Organization Voting System<br>Cast your vote for the future leaders</p>
@@ -410,16 +405,6 @@
 
   <!-- MAIN PAGE -->
   <div id="mainPage" class="hidden">
-    <!-- Top Header -->
-    <header class="top-header">
-      <div class="top-header-content">
-        <a href="#" class="header-logo">
-          <div class="header-logo-icon">STI</div>
-          <span class="header-logo-text">STI Education Services Group</span>
-        </a>
-      </div>
-    </header>
-    
     <nav class="navbar">
       <div class="nav-content">
         <div class="nav-brand">
