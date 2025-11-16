@@ -226,57 +226,105 @@
     
     .section-header {
       margin-bottom: 32px;
+      text-align: center;
     }
     
     .section-header h2 {
       color: var(--sti-dark);
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 700;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     
     .section-header p {
       color: var(--sti-gray);
-      font-size: 16px;
+      font-size: 18px;
     }
     
     .candidates-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 24px;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 32px;
+      margin-bottom: 48px;
     }
     
     .candidate-card {
       background: var(--sti-white);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
-      border: 2px solid transparent;
+      border: 3px solid transparent;
     }
     
     .candidate-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
       border-color: var(--sti-gold);
+    }
+    
+    .candidate-photo {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      background: linear-gradient(135deg, var(--sti-teal) 0%, var(--sti-gold) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      color: var(--sti-white);
+    }
+    
+    .candidate-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .candidate-content {
+      padding: 24px;
     }
     
     .candidate-header {
       margin-bottom: 16px;
+      text-align: center;
+      border-bottom: 2px solid var(--sti-light);
+      padding-bottom: 16px;
     }
     
     .candidate-card h3 {
       color: var(--sti-dark);
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     
     .candidate-card .position {
       color: var(--sti-teal);
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .candidate-description {
+      color: var(--sti-gray);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      min-height: 60px;
+    }
+    
+    .candidate-slogan {
+      background: linear-gradient(135deg, rgba(212, 164, 24, 0.1) 0%, rgba(27, 139, 158, 0.1) 100%);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-style: italic;
+      color: var(--sti-dark);
+      font-weight: 500;
+      text-align: center;
+      border-left: 4px solid var(--sti-gold);
     }
     
     .vote-info {
@@ -285,7 +333,7 @@
       justify-content: space-between;
       margin-top: 20px;
       padding-top: 20px;
-      border-top: 1px solid #E0E0E0;
+      border-top: 2px solid var(--sti-light);
     }
     
     .vote-count {
@@ -300,9 +348,9 @@
     .vote-number {
       background: linear-gradient(135deg, var(--sti-teal) 0%, #156876 100%);
       color: var(--sti-white);
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
     }
     
@@ -310,10 +358,10 @@
       background: linear-gradient(135deg, var(--sti-gold) 0%, #C49415 100%);
       border: none;
       color: var(--sti-white);
-      padding: 10px 24px;
+      padding: 12px 28px;
       border-radius: 8px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
       transition: all 0.3s;
       text-transform: uppercase;
@@ -322,7 +370,7 @@
     
     .vote-btn:hover:not(:disabled) {
       transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(212, 164, 24, 0.4);
+      box-shadow: 0 6px 16px rgba(212, 164, 24, 0.4);
     }
     
     .vote-btn:disabled {
@@ -333,12 +381,12 @@
     
     .results-btn {
       background: var(--sti-white);
-      border: 2px solid var(--sti-teal);
+      border: 3px solid var(--sti-teal);
       color: var(--sti-teal);
-      padding: 14px 32px;
-      border-radius: 8px;
+      padding: 16px 40px;
+      border-radius: 10px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
       transition: all 0.3s;
       display: block;
@@ -351,7 +399,7 @@
       background: var(--sti-teal);
       color: var(--sti-white);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(27, 139, 158, 0.3);
+      box-shadow: 0 6px 20px rgba(27, 139, 158, 0.3);
     }
     
     @media (max-width: 768px) {
@@ -375,6 +423,10 @@
       
       .header-logo-text {
         font-size: 16px;
+      }
+      
+      .section-header h2 {
+        font-size: 28px;
       }
     }
   </style>
@@ -430,8 +482,8 @@
     
     <div class="container">
       <div class="section-header">
-        <h2>Student Council Candidates</h2>
-        <p>Choose your candidate wisely. You can only vote once.</p>
+        <h2>🎓 Meet Your Candidates</h2>
+        <p>Learn about each candidate and cast your vote for the future of our student council</p>
       </div>
       
       <div id="candidatesList" class="candidates-grid"></div>
@@ -443,6 +495,35 @@
   <script>
     let currentUser = null;
     let hasVoted = false;
+
+    // Candidate data with photos and descriptions
+    const candidateData = {
+      'c1': {
+        photo: 'https://via.placeholder.com/400x300/1B8B9E/FFFFFF?text=Kiel+Abalajos',
+        description: 'Dedicated student leader with a vision for innovation and inclusive campus development.',
+        slogan: '"Leading with integrity, serving with passion"'
+      },
+      'c2': {
+        photo: 'https://via.placeholder.com/400x300/D4A418/FFFFFF?text=Symon+Pena',
+        description: 'Committed to transparency and student welfare, bringing fresh perspectives to student governance.',
+        slogan: '"Your voice, our priority"'
+      },
+      'c3': {
+        photo: 'https://via.placeholder.com/400x300/2C3E50/FFFFFF?text=Josh+Sumido',
+        description: 'Organized and detail-oriented, ensuring clear communication and efficient operations.',
+        slogan: '"Documentation meets dedication"'
+      },
+      'c4': {
+        photo: 'https://via.placeholder.com/400x300/10b981/FFFFFF?text=Gclef+Dominguez',
+        description: 'Financial transparency advocate with strong analytical skills and ethical practices.',
+        slogan: '"Accountability in every cent"'
+      },
+      'c5': {
+        photo: 'https://via.placeholder.com/400x300/ef4444/FFFFFF?text=Zhyke+Dela+Cruz',
+        description: 'Strategic financial planner focused on sustainable budget management for student programs.',
+        slogan: '"Smart spending, bright future"'
+      }
+    };
 
     async function checkAuth() {
       try {
@@ -497,21 +578,31 @@
         list.innerHTML = '';
         
         data.candidates.forEach(c => {
+          const extraData = candidateData[c.id] || {};
           const card = document.createElement('div');
           card.className = 'candidate-card';
           card.innerHTML = `
-            <div class="candidate-header">
-              <h3>${c.name}</h3>
-              <p class="position">${c.desc}</p>
+            <div class="candidate-photo">
+              <img src="${extraData.photo || ''}" alt="${c.name}" onerror="this.parentElement.innerHTML='👤'">
             </div>
-            <div class="vote-info">
-              <div class="vote-count">
-                <span>Votes:</span>
-                <span class="vote-number">${c.votes}</span>
+            <div class="candidate-content">
+              <div class="candidate-header">
+                <h3>${c.name}</h3>
+                <p class="position">${c.desc}</p>
               </div>
-              <button class="vote-btn" ${hasVoted || !data.votingEnabled ? 'disabled' : ''} onclick="vote('${c.id}')">
-                ${!data.votingEnabled ? 'Closed' : hasVoted ? 'Voted' : 'Vote'}
-              </button>
+              ${extraData.slogan ? `<div class="candidate-slogan">${extraData.slogan}</div>` : ''}
+              <div class="candidate-description">
+                ${extraData.description || 'Committed to serving the student body with dedication and excellence.'}
+              </div>
+              <div class="vote-info">
+                <div class="vote-count">
+                  <span>Votes:</span>
+                  <span class="vote-number">${c.votes}</span>
+                </div>
+                <button class="vote-btn" ${hasVoted || !data.votingEnabled ? 'disabled' : ''} onclick="vote('${c.id}')">
+                  ${!data.votingEnabled ? 'Closed' : hasVoted ? 'Voted' : 'Vote'}
+                </button>
+              </div>
             </div>
           `;
           list.appendChild(card);
