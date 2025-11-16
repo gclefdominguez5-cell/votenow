@@ -19,7 +19,9 @@ const config = {
 // ADMIN CONFIGURATION - Add admin email addresses here
 const ADMIN_EMAILS = [
   'gclefdominguez5@gmail.com', // Replace with your actual admin Gmail
-  'ggclefthedragon10@gmail.com' // Add more admins as needed
+  'ggclefthedragon10@gmail.com',
+  'josh.sumido015@gmail.com',
+  'princeckalelrivera@gmail.com', // Add more admins as needed
 ];
 
 // In-memory storage (replace with database in production)
