@@ -24,27 +24,19 @@
       overflow-x: hidden;
     }
     
-    html::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('https://www.sti.edu/images/2022/fbimages/omnibus.jpg') center/cover;
-      filter: blur(10px);
-      transform: scale(1.1);
-      z-index: -2;
+    body {
+      background: #f0f0f0;
     }
     
-    html::after {
+    body::before {
       content: '';
       position: fixed;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(245, 245, 245, 0.92) 0%, rgba(232, 232, 232, 0.88) 100%);
+      width: 100%;
+      height: 100%;
+      background: url('https://www.sti.edu/images/2022/fbimages/omnibus.jpg') center/cover no-repeat;
+      opacity: 0.3;
       z-index: -1;
     }
     
@@ -57,7 +49,7 @@
       justify-content: center;
       min-height: 100vh;
       padding: 20px;
-      background: linear-gradient(135deg, rgba(27, 139, 158, 0.95) 0%, rgba(21, 104, 118, 0.95) 100%);
+      background: #1B8B9E;
       position: relative;
     }
     
@@ -66,12 +58,11 @@
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('https://www.sti.edu/images/2022/fbimages/omnibus.jpg') center/cover;
-      filter: blur(12px);
-      transform: scale(1.1);
-      z-index: -1;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.sti.edu/images/2022/fbimages/omnibus.jpg') center/cover no-repeat;
+      opacity: 0.4;
+      z-index: 0;
     }
     
     .login-card {
