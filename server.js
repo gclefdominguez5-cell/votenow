@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 // CONFIGURATION - YOU NEED TO FILL THESE IN
 // ============================================
 const config = {
-  clientID: '101909793416-mppsa631rpeuh1mkoikmo32fgciafgro.apps.googleusercontent.com',
-  clientSecret: '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',
-  callbackURL: 'http://localhost:3000/auth/google/callback'
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK_URL
 };
 
 // ADMIN CONFIGURATION - Add admin email addresses here
@@ -44,10 +44,15 @@ let votingEnabled = true; // Admin can enable/disable voting
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
-  secret: 'stiersonly',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // Set to true with HTTPS in production
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'lax'
+  }
 }));
 
 app.use(passport.initialize());
