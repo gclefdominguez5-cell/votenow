@@ -526,7 +526,7 @@
       
       <div id="candidatesList" class="candidates-grid"></div>
       
-      <button class="results-btn" onclick="showResults()">📊 View Current Results</button>
+      <button class="results-btn" onclick="showResults()">View Current Results</button>
     </div>
   </div>
 
@@ -667,7 +667,7 @@
         
         if (response.ok) {
           hasVoted = true;
-          alert('Vote recorded successfully! ✅');
+          alert('Vote recorded successfully!');
           loadCandidates();
         } else {
           alert(data.error || 'Failed to record vote');
@@ -692,7 +692,7 @@
         ];
         
         const msg = candidates.map(c => `${c.name}: ${results[c.id]} votes`).join('\n');
-        alert('📊 Current Results:\n\n' + msg);
+        alert('Current Results:\n\n' + msg);
       } catch (error) {
         console.error('Failed to load results:', error);
       }
