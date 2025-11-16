@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VoteNow – Google Sign-In</title>
+  <style>
+    :root {
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c5cff;
+      font-family: Inter, ui-sans-serif, system-ui;
+    }
+    html,body {height:100%;margin:0;background:linear-gradient(180deg,#071025 0%, #0b1220 100%);color:#e6eef6;}
+    .hidden {display:none !important;}
+    
+    .center {display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+    .card {background:rgba(255,255,255,0.05);padding:28px 24px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6);width:320px;text-align:center;}
+    button {background:var(--accent);border:0;color:white;padding:12px 20px;border-radius:8px;font-weight:600;margin-top:10px;cursor:pointer;width:100%;transition:all 0.2s;}
+    button:hover {opacity:0.9;transform:translateY(-1px);}
+    button.google {background:#fff;color:#3c4043;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 2px 4px rgba(0,0,0,0.2);}
+    button.google:hover {box-shadow:0 4px 8px rgba(0,0,0,0.3);}
+    button.ghost {background:transparent;border:1px solid rgba(255,255,255,0.2);}
+    .container {max-width:980px;margin:36px auto;padding:20px;}
+    header {display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+    .candidate {display:flex;justify-content:space-between;align-items:center;padding:16px;border-radius:10px;margin-bottom:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
+    .candidate h3 {margin:0;font-size:16px;}
+    .candidate p {margin:4px 0 0 0;color:var(--muted);font-size:13px;}
+    .candidate button {width:auto;padding:8px 16px;margin:0;}
+    .candidate button:disabled {opacity:0.5;cursor:not-allowed;}
+  </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="center">
+    <div class="card">
+      <h2>🗳️ VoteNow</h2>
+      <p style="color:var(--muted);margin-bottom:20px">Student Council Organization Voting System</p>
+      <button class="google" onclick="loginWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+        </svg>
+        Sign in with Google
+      </button>
+      <p style="color:var(--muted);font-size:12px;margin-top:16px;">Use your Gmail or Google account to vote</p>
+      
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
+    <a href="/adminlogin.html" style="color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">
+        ← Go to Admin Panel
+    </a>
+</div>
+            </div>
+                </button>
+            </div>
+       
+                </a>
+            </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN PAGE -->
+  <div id="mainPage" class="hidden">
+    <div class="container">
+      <header>
+        <h1>🗳️ VoteNow</h1>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span id="welcomeUser" style="color:var(--muted);"></span>
+          <button id="logoutBtn" class="ghost" onclick="logout()">Logout</button>
+        </div>
+      </header>
+      <section>
+        <h2>Candidates</h2>
+        <p style="color:var(--muted)">Click a button to vote. One vote per user.</p>
+        <div id="candidatesList"></div>
+        <button id="resultsBtn" class="ghost" onclick="showResults()">View Results</button>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let hasVoted = false;
+
+    async function checkAuth() {
+    try {
+        const response = await fetch('/api/user');
+        const data = await response.json();
+        
+        if (data.authenticated) {
+            currentUser = data.user;
+            hasVoted = data.hasVoted;
+            
+            // NEW: Check if user is admin
+            if (data.isAdmin) {
+                // Redirect admin to admin panel
+                window.location.href = '/admin';
+                return;
+            }
+            
+            // Regular user goes to main page
+            showMainPage();
+        } else {
+            showLoginPage();
+        }
+    } catch (error) {
+        console.error('Auth check failed:', error);
+        showLoginPage();
+    }
+}
+
+    async function loginWithGoogle() {
+    window.location.href = '/auth/google';
+}
+
+    function logout() {
+      window.location.href = '/logout';
+    }
+
+    function showLoginPage() {
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('mainPage').classList.add('hidden');
+    }
+
+    function showMainPage() {
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('mainPage').classList.remove('hidden');
+      document.getElementById('welcomeUser').textContent = `${currentUser.name || currentUser.email}`;
+      loadCandidates();
+    }
+
+    async function loadCandidates() {
+      try {
+        const response = await fetch('/api/candidates');
+        const data = await response.json();
+        
+        const list = document.getElementById('candidatesList');
+        list.innerHTML = '';
+        
+        data.candidates.forEach(c => {
+          const div = document.createElement('div');
+          div.className = 'candidate';
+          div.innerHTML = `
+            <div>
+              <h3>${c.name}</h3>
+              <p>${c.desc}</p>
+            </div>
+            <div style="text-align:right;">
+              <strong style="display:block;margin-bottom:8px;">Votes: ${c.votes}</strong>
+              <button ${hasVoted || !data.votingEnabled ? 'disabled' : ''} onclick="vote('${c.id}')">
+                ${!data.votingEnabled ? 'Voting Closed' : hasVoted ? 'Voted' : 'Vote'}
+              </button>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Failed to load candidates:', error);
+      }
+    }
+
+    async function vote(candidateId) {
+      if (hasVoted) {
+        alert('You have already voted!');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/vote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ candidateId })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          hasVoted = true;
+          alert('Vote recorded successfully! ✅');
+          loadCandidates();
+        } else {
+          alert(data.error || 'Failed to record vote');
+        }
+      } catch (error) {
+        console.error('Vote failed:', error);
+        alert('Failed to record vote. Please try again.');
+      }
+    }
+
+    async function showResults() {
+      try {
+        const response = await fetch('/api/results');
+        const results = await response.json();
+        
+        const candidates = [
+          { id: 'c1', name: 'Kiel Abalajos' },
+          { id: 'c2', name: 'Symon Pena' },
+          { id: 'c3', name: 'Josh Sumido' },
+          { id: 'c4', name: 'Gclef dominguez' },
+          { id: 'c5', name: 'Zhyke Dela Cruz' }
+        ];
+        
+        const msg = candidates.map(c => `${c.name}: ${results[c.id]} votes`).join('\n');
+        alert('📊 Current Results:\n\n' + msg);
+      } catch (error) {
+        console.error('Failed to load results:', error);
+      }
+    }
+
+    // Check authentication on page load
+    checkAuth();
+  </script>
+</body>
+</html>

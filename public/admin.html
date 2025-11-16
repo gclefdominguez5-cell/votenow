@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Panel – VoteNow</title>
+  <style>
+    :root {
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c5cff;
+      --success:#10b981; --danger:#ef4444; --warning:#f59e0b;
+      font-family: Inter, ui-sans-serif, system-ui;
+    }
+    html,body {height:100%;margin:0;background:linear-gradient(180deg,#071025 0%, #0b1220 100%);color:#e6eef6;}
+    .hidden {display:none !important;}
+    
+    .center {display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
+    .card {background:rgba(255,255,255,0.05);padding:28px 24px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6);width:320px;text-align:center;}
+    
+    button {background:var(--accent);border:0;color:white;padding:12px 20px;border-radius:8px;font-weight:600;margin-top:10px;cursor:pointer;transition:all 0.2s;}
+    button:hover {opacity:0.9;transform:translateY(-1px);}
+    button.google {background:#fff;color:#3c4043;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;box-shadow:0 2px 4px rgba(0,0,0,0.2);}
+    button.google:hover {box-shadow:0 4px 8px rgba(0,0,0,0.3);}
+    button.ghost {background:transparent;border:1px solid rgba(255,255,255,0.2);}
+    button.success {background:var(--success);}
+    button.danger {background:var(--danger);}
+    button.warning {background:var(--warning);}
+    button:disabled {opacity:0.5;cursor:not-allowed;}
+    
+    .container {max-width:1200px;margin:36px auto;padding:20px;}
+    header {display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);}
+    
+    .stats-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
+    .stat-card {background:rgba(255,255,255,0.03);padding:20px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);}
+    .stat-card h3 {margin:0 0 8px 0;color:var(--muted);font-size:14px;font-weight:500;}
+    .stat-card .value {font-size:32px;font-weight:700;color:var(--accent);}
+    
+    .section {background:rgba(255,255,255,0.02);padding:24px;border-radius:12px;margin-bottom:24px;border:1px solid rgba(255,255,255,0.05);}
+    .section h2 {margin:0 0 16px 0;font-size:20px;}
+    
+    .candidate-item {display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.05);}
+    .candidate-info h3 {margin:0;font-size:16px;}
+    .candidate-info p {margin:4px 0 0 0;color:var(--muted);font-size:13px;}
+    .candidate-actions {display:flex;gap:8px;}
+    .candidate-actions button {margin:0;padding:8px 12px;font-size:13px;}
+    
+    .progress-bar {background:rgba(255,255,255,0.1);height:8px;border-radius:4px;overflow:hidden;margin-top:8px;}
+    .progress-fill {background:var(--accent);height:100%;transition:width 0.3s;}
+    
+    table {width:100%;border-collapse:collapse;}
+    table th {text-align:left;padding:12px;border-bottom:1px solid rgba(255,255,255,0.1);color:var(--muted);font-weight:600;}
+    table td {padding:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
+    
+    input[type=text] {width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:inherit;margin-bottom:8px;}
+    
+    .modal {position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;}
+    .modal-content {background:var(--card);padding:24px;border-radius:12px;min-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+    .modal-content h3 {margin:0 0 16px 0;}
+    
+    .status-badge {display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;}
+    .status-badge.active {background:var(--success);color:white;}
+    .status-badge.inactive {background:var(--danger);color:white;}
+  </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="center">
+    <div class="card">
+      <h2>🔐 Admin Panel</h2>
+      <p style="color:var(--muted);margin-bottom:20px">VoteNow Administration</p>
+      <button class="google" onclick="loginWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.593.102-1.17.282-1.709V4.958H.957C.347 6.173 0 7.548 0 9c0 1.452.348 2.827.957 4.042l3.007-2.335z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+        </svg>
+        Admin Login with Google
+      </button>
+      <p style="color:var(--muted);font-size:12px;margin-top:16px;">Admin access required - Use authorized Gmail</p>
+      
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
+        <p style="color:var(--muted);font-size:13px;margin-bottom:10px;">Not an admin?</p>
+        <button class="ghost" onclick="goToVoting()" style="font-size:14px;">
+          🗳️ Go to Voting Page
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN ADMIN PAGE -->
+  <div id="adminPage" class="hidden">
+    <div class="container">
+      <header>
+        <div>
+          <h1>🔐 Admin Panel</h1>
+          <p style="color:var(--muted);margin:4px 0 0 0;">VoteNow Administration</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span id="welcomeAdmin" style="color:var(--muted);"></span> 
+          <button class="ghost" onclick="logout()">Logout</button>
+          <script>
+    // Protect admin page
+    async function protectAdminPage() {
+        try {
+            const response = await fetch('/api/user');
+            const data = await response.json();
+            
+            if (!data.authenticated || !data.isAdmin) {
+                // Not admin, redirect to admin login
+                window.location.href = '/adminlogin.html';
+            }
+        } catch (error) {
+            window.location.href = '/adminlogin.html';
+        }
+    }
+    
+    protectAdminPage();
+</script>
+        </div>
+        
+      </header>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Votes</h3>
+          <div class="value" id="totalVotes">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Voters</h3>
+          <div class="value" id="totalVoters">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>Voting Status</h3>
+          <div class="value" style="font-size:16px;margin-top:8px;">
+            <span id="votingStatus" class="status-badge active">Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="section">
+        <h2>Controls</h2>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button id="toggleVotingBtn" class="warning" onclick="toggleVoting()">⏸️ Pause Voting</button>
+          <button class="danger" onclick="confirmReset()">🔄 Reset All Votes</button>
+          <button class="success" onclick="exportResults()">📥 Export Results</button>
+          <button class="ghost" onclick="refreshData()">🔄 Refresh Data</button>
+        </div>
+      </div>
+
+      <!-- Candidates -->
+      <div class="section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h2 style="margin:0;">Candidates</h2>
+          <button class="success" onclick="showAddCandidate()">+ Add Candidate</button>
+        </div>
+        <div id="candidatesList"></div>
+      </div>
+
+      <!-- Voters List -->
+      <div class="section">
+        <h2>Voters List</h2>
+        <div style="overflow-x:auto;">
+          <table id="votersTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Email</th>
+                <th>Voted For</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <p id="noVoters" class="hidden" style="color:var(--muted);text-align:center;padding:20px;">No votes yet</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Candidate Modal -->
+  <div id="candidateModal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modalTitle">Add Candidate</h3>
+      <input type="text" id="candidateName" placeholder="Candidate Name">
+      <input type="text" id="candidateDesc" placeholder="Position (e.g., For President)">
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button class="success" onclick="saveCandidate()">Save</button>
+        <button class="ghost" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let statsData = null;
+    let editingCandidateId = null;
+
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/user');
+        const data = await response.json();
+        
+        if (data.authenticated && data.isAdmin) {
+          currentUser = data.user;
+          showAdminPage();
+        } else if (data.authenticated && !data.isAdmin) {
+          alert('❌ Access Denied: Admin privileges required');
+          window.location.href = '/';
+        } else {
+          showLoginPage();
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        showLoginPage();
+      }
+    }
+
+    function loginWithGoogle() {
+      window.location.href = '/auth/google';
+    }
+
+    function logout() {
+      window.location.href = '/logout';
+    }
+
+    function goToVoting() {
+      window.location.href = '/';
+    }
+
+    function showLoginPage() {
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('adminPage').classList.add('hidden');
+    }
+
+    function showAdminPage() {
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('adminPage').classList.remove('hidden');
+      document.getElementById('welcomeAdmin').textContent = currentUser.name || currentUser.email;
+      loadAdminData();
+    }
+
+    async function loadAdminData() {
+      try {
+        const response = await fetch('/api/admin/stats');
+        if (!response.ok) throw new Error('Failed to load admin data');
+        
+        statsData = await response.json();
+        updateStats();
+        updateCandidatesList();
+        updateVotersList();
+      } catch (error) {
+        console.error('Failed to load admin data:', error);
+        alert('Error loading data. Please refresh the page.');
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('totalVotes').textContent = statsData.totalVotes;
+      document.getElementById('totalVoters').textContent = statsData.totalVoters;
+      
+      const statusBadge = document.getElementById('votingStatus');
+      const toggleBtn = document.getElementById('toggleVotingBtn');
+      
+      if (statsData.votingEnabled) {
+        statusBadge.textContent = 'Active';
+        statusBadge.className = 'status-badge active';
+        toggleBtn.innerHTML = '⏸️ Pause Voting';
+        toggleBtn.className = 'warning';
+      } else {
+        statusBadge.textContent = 'Paused';
+        statusBadge.className = 'status-badge inactive';
+        toggleBtn.innerHTML = '▶️ Resume Voting';
+        toggleBtn.className = 'success';
+      }
+    }
+
+    function updateCandidatesList() {
+      const list = document.getElementById('candidatesList');
+      list.innerHTML = '';
+      
+      statsData.candidates.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'candidate-item';
+        div.innerHTML = `
+          <div style="flex:1;">
+            <div class="candidate-info">
+              <h3>${c.name}</h3>
+              <p>${c.desc}</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
+              <strong>${c.votes} votes (${c.percentage}%)</strong>
+              <div class="progress-bar" style="width:200px;">
+                <div class="progress-fill" style="width:${c.percentage}%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="candidate-actions">
+            <button class="ghost" onclick="editCandidate('${c.id}')">Edit</button>
+            <button class="danger" onclick="deleteCandidate('${c.id}')">Delete</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function updateVotersList() {
+      const tbody = document.querySelector('#votersTable tbody');
+      const noVoters = document.getElementById('noVoters');
+      
+      if (statsData.voters.length === 0) {
+        tbody.innerHTML = '';
+        noVoters.classList.remove('hidden');
+      } else {
+        noVoters.classList.add('hidden');
+        tbody.innerHTML = statsData.voters.map((v, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${v.email}</td>
+            <td>${v.votedFor}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    async function toggleVoting() {
+      try {
+        const response = await fetch('/api/admin/toggle-voting', { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.success) {
+          await loadAdminData();
+          alert(data.votingEnabled ? '✅ Voting enabled' : '⏸️ Voting paused');
+        }
+      } catch (error) {
+        alert('Failed to toggle voting');
+      }
+    }
+
+    function confirmReset() {
+      if (confirm('⚠️ Are you sure you want to reset ALL votes? This cannot be undone!')) {
+        if (confirm('🚨 FINAL WARNING: This will delete all voting data. Continue?')) {
+          resetVotes();
+        }
+      }
+    }
+
+    async function resetVotes() {
+      try {
+        const response = await fetch('/api/admin/reset-votes', { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.success) {
+          await loadAdminData();
+          alert('✅ All votes have been reset');
+        }
+      } catch (error) {
+        alert('Failed to reset votes');
+      }
+    }
+
+    async function exportResults() {
+      try {
+        const response = await fetch('/api/admin/export');
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'voting-results.json';
+        a.click();
+        alert('✅ Results exported successfully');
+      } catch (error) {
+        alert('Failed to export results');
+      }
+    }
+
+    function showAddCandidate() {
+      editingCandidateId = null;
+      document.getElementById('modalTitle').textContent = 'Add Candidate';
+      document.getElementById('candidateName').value = '';
+      document.getElementById('candidateDesc').value = '';
+      document.getElementById('candidateModal').classList.remove('hidden');
+    }
+
+    function editCandidate(id) {
+      editingCandidateId = id;
+      const candidate = statsData.candidates.find(c => c.id === id);
+      document.getElementById('modalTitle').textContent = 'Edit Candidate';
+      document.getElementById('candidateName').value = candidate.name;
+      document.getElementById('candidateDesc').value = candidate.desc;
+      document.getElementById('candidateModal').classList.remove('hidden');
+    }
+
+    async function saveCandidate() {
+      const name = document.getElementById('candidateName').value.trim();
+      const desc = document.getElementById('candidateDesc').value.trim();
+      
+      if (!name || !desc) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      try {
+        let response;
+        if (editingCandidateId) {
+          response = await fetch(`/api/admin/update-candidate/${editingCandidateId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, desc })
+          });
+        } else {
+          response = await fetch('/api/admin/add-candidate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, desc })
+          });
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          closeModal();
+          await loadAdminData();
+          alert('✅ Candidate saved successfully');
+        }
+      } catch (error) {
+        alert('Failed to save candidate');
+      }
+    }
+
+    async function deleteCandidate(id) {
+      if (!confirm('Are you sure you want to delete this candidate?')) return;
+
+      try {
+        const response = await fetch(`/api/admin/delete-candidate/${id}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          await loadAdminData();
+          alert('✅ Candidate deleted');
+        }
+      } catch (error) {
+        alert('Failed to delete candidate');
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('candidateModal').classList.add('hidden');
+    }
+
+    function refreshData() {
+      loadAdminData();
+    }
+
+    // Check authentication on page load
+    checkAuth();
+  </script>
+</body>
+</html>
