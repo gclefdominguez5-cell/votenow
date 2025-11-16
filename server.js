@@ -47,6 +47,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Add this for Render/production environments
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
@@ -103,18 +104,26 @@ app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-app.get('/auth/google/callback',
+aapp.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     console.log('User authenticated:', req.user);
     console.log('Is admin?', req.user ? ADMIN_EMAILS.includes(req.user.email) : false);
     
-    // Redirect based on admin status
-    if (isAdmin(req.user.email)) {
-      res.redirect('/admin');
-    } else {
-      res.redirect('/');
-    }
+    // Save session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.redirect('/');
+      }
+      
+      // Redirect based on admin status
+      if (isAdmin(req.user.email)) {
+        res.redirect('/admin');
+      } else {
+        res.redirect('/');
+      }
+    });
   }
 );
 
