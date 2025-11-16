@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ============================================
-// CONFIGURATION - YOU NEED TO FILL THESE IN
+// CONFIGURATION
 // ============================================
 const config = {
   clientID: process.env.GOOGLE_CLIENT_ID,
@@ -18,7 +18,7 @@ const config = {
 
 // ADMIN CONFIGURATION - Add admin email addresses here
 const ADMIN_EMAILS = [
-  'gclefdominguez5@gmail.com', // Replace with your actual admin Gmail
+  'gclefdominguez5@gmail.com', 
   'ggclefthedragon10@gmail.com',
   'josh.sumido015@gmail.com',
   'princeckalelrivera@gmail.com', // Add more admins as needed
