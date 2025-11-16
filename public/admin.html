@@ -6,56 +6,55 @@
   <title>Admin Panel – VoteNow</title>
   <style>
     :root {
-      --bg:#0066b2; --card:#003d6b; --muted:#7ca5c9; --accent:#ffd700;
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c5cff;
       --success:#10b981; --danger:#ef4444; --warning:#f59e0b;
-      --sti-blue:#0066b2; --sti-yellow:#ffd700; --sti-dark-blue:#003d6b;
       font-family: Inter, ui-sans-serif, system-ui;
     }
-    html,body {height:100%;margin:0;background:linear-gradient(180deg,#003d6b 0%, #0066b2 100%);color:#ffffff;}
+    html,body {height:100%;margin:0;background:linear-gradient(180deg,#071025 0%, #0b1220 100%);color:#e6eef6;}
     .hidden {display:none !important;}
     
     .center {display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;}
-    .card {background:rgba(0,61,107,0.95);padding:28px 24px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);width:320px;text-align:center;border:2px solid rgba(255,215,0,0.3);}
+    .card {background:rgba(255,255,255,0.05);padding:28px 24px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6);width:320px;text-align:center;}
     
-    button {background:var(--accent);border:0;color:#003d6b;padding:12px 20px;border-radius:8px;font-weight:700;margin-top:10px;cursor:pointer;transition:all 0.2s;}
-    button:hover {opacity:0.9;transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,215,0,0.4);}
+    button {background:var(--accent);border:0;color:white;padding:12px 20px;border-radius:8px;font-weight:600;margin-top:10px;cursor:pointer;transition:all 0.2s;}
+    button:hover {opacity:0.9;transform:translateY(-1px);}
     button.google {background:#fff;color:#3c4043;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;box-shadow:0 2px 4px rgba(0,0,0,0.2);}
     button.google:hover {box-shadow:0 4px 8px rgba(0,0,0,0.3);}
-    button.ghost {background:transparent;border:2px solid var(--accent);color:var(--accent);font-weight:600;}
-    button.success {background:var(--success);color:white;}
-    button.danger {background:var(--danger);color:white;}
-    button.warning {background:var(--warning);color:white;}
+    button.ghost {background:transparent;border:1px solid rgba(255,255,255,0.2);}
+    button.success {background:var(--success);}
+    button.danger {background:var(--danger);}
+    button.warning {background:var(--warning);}
     button:disabled {opacity:0.5;cursor:not-allowed;}
     
     .container {max-width:1200px;margin:36px auto;padding:20px;}
-    header {display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid rgba(255,215,0,0.3);}
+    header {display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.1);}
     
     .stats-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px;}
-    .stat-card {background:rgba(0,61,107,0.6);padding:20px;border-radius:10px;border:2px solid rgba(255,215,0,0.3);}
-    .stat-card h3 {margin:0 0 8px 0;color:#ffd700;font-size:14px;font-weight:600;}
-    .stat-card .value {font-size:32px;font-weight:700;color:#ffd700;}
+    .stat-card {background:rgba(255,255,255,0.03);padding:20px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);}
+    .stat-card h3 {margin:0 0 8px 0;color:var(--muted);font-size:14px;font-weight:500;}
+    .stat-card .value {font-size:32px;font-weight:700;color:var(--accent);}
     
-    .section {background:rgba(0,61,107,0.5);padding:24px;border-radius:12px;margin-bottom:24px;border:2px solid rgba(255,215,0,0.2);}
-    .section h2 {margin:0 0 16px 0;font-size:20px;color:#ffd700;}
+    .section {background:rgba(255,255,255,0.02);padding:24px;border-radius:12px;margin-bottom:24px;border:1px solid rgba(255,255,255,0.05);}
+    .section h2 {margin:0 0 16px 0;font-size:20px;}
     
-    .candidate-item {display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(0,61,107,0.4);border-radius:8px;margin-bottom:12px;border:1px solid rgba(255,215,0,0.2);}
-    .candidate-info h3 {margin:0;font-size:16px;color:#ffd700;}
+    .candidate-item {display:flex;justify-content:space-between;align-items:center;padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.05);}
+    .candidate-info h3 {margin:0;font-size:16px;}
     .candidate-info p {margin:4px 0 0 0;color:var(--muted);font-size:13px;}
     .candidate-actions {display:flex;gap:8px;}
     .candidate-actions button {margin:0;padding:8px 12px;font-size:13px;}
     
-    .progress-bar {background:rgba(255,255,255,0.2);height:8px;border-radius:4px;overflow:hidden;margin-top:8px;}
-    .progress-fill {background:#ffd700;height:100%;transition:width 0.3s;}
+    .progress-bar {background:rgba(255,255,255,0.1);height:8px;border-radius:4px;overflow:hidden;margin-top:8px;}
+    .progress-fill {background:var(--accent);height:100%;transition:width 0.3s;}
     
     table {width:100%;border-collapse:collapse;}
-    table th {text-align:left;padding:12px;border-bottom:2px solid rgba(255,215,0,0.3);color:#ffd700;font-weight:600;}
-    table td {padding:12px;border-bottom:1px solid rgba(255,215,0,0.1);}
+    table th {text-align:left;padding:12px;border-bottom:1px solid rgba(255,255,255,0.1);color:var(--muted);font-weight:600;}
+    table td {padding:12px;border-bottom:1px solid rgba(255,255,255,0.05);}
     
-    input[type=text] {width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,215,0,0.3);background:rgba(0,61,107,0.5);color:inherit;margin-bottom:8px;}
+    input[type=text] {width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.02);color:inherit;margin-bottom:8px;}
     
     .modal {position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;}
-    .modal-content {background:var(--card);padding:24px;border-radius:12px;min-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.5);border:2px solid rgba(255,215,0,0.3);}
-    .modal-content h3 {margin:0 0 16px 0;color:#ffd700;}
+    .modal-content {background:var(--card);padding:24px;border-radius:12px;min-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+    .modal-content h3 {margin:0 0 16px 0;}
     
     .status-badge {display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600;}
     .status-badge.active {background:var(--success);color:white;}
@@ -79,7 +78,7 @@
       </button>
       <p style="color:var(--muted);font-size:12px;margin-top:16px;">Admin access required - Use authorized Gmail</p>
       
-      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,215,0,0.3);">
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
         <p style="color:var(--muted);font-size:13px;margin-bottom:10px;">Not an admin?</p>
         <button class="ghost" onclick="goToVoting()" style="font-size:14px;">
           🗳️ Go to Voting Page
@@ -93,13 +92,32 @@
     <div class="container">
       <header>
         <div>
-          <h1 style="color:#ffd700;">🔐 Admin Panel</h1>
+          <h1>🔐 Admin Panel</h1>
           <p style="color:var(--muted);margin:4px 0 0 0;">VoteNow Administration</p>
         </div>
         <div style="display:flex;align-items:center;gap:12px;">
           <span id="welcomeAdmin" style="color:var(--muted);"></span> 
           <button class="ghost" onclick="logout()">Logout</button>
+          <script>
+    // Protect admin page
+    async function protectAdminPage() {
+        try {
+            const response = await fetch('/api/user');
+            const data = await response.json();
+            
+            if (!data.authenticated || !data.isAdmin) {
+                // Not admin, redirect to admin login
+                window.location.href = '/adminlogin.html';
+            }
+        } catch (error) {
+            window.location.href = '/adminlogin.html';
+        }
+    }
+    
+    protectAdminPage();
+</script>
         </div>
+        
       </header>
 
       <!-- Stats -->
@@ -177,21 +195,6 @@
     let currentUser = null;
     let statsData = null;
     let editingCandidateId = null;
-
-    // Protect admin page
-    async function protectAdminPage() {
-        try {
-            const response = await fetch('/api/user');
-            const data = await response.json();
-            
-            if (!data.authenticated || !data.isAdmin) {
-                // Not admin, redirect to admin login
-                window.location.href = '/adminlogin.html';
-            }
-        } catch (error) {
-            window.location.href = '/adminlogin.html';
-        }
-    }
 
     async function checkAuth() {
       try {
@@ -286,7 +289,7 @@
               <p>${c.desc}</p>
             </div>
             <div style="display:flex;align-items:center;gap:16px;margin-top:8px;">
-              <strong style="color:#ffd700;">${c.votes} votes (${c.percentage}%)</strong>
+              <strong>${c.votes} votes (${c.percentage}%)</strong>
               <div class="progress-bar" style="width:200px;">
                 <div class="progress-fill" style="width:${c.percentage}%"></div>
               </div>
@@ -451,7 +454,6 @@
     }
 
     // Check authentication on page load
-    protectAdminPage();
     checkAuth();
   </script>
 </body>
