@@ -106,7 +106,9 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/');
+    console.log('User authenticated:', req.user);
+    console.log('Is admin?', req.user ? ADMIN_EMAILS.includes(req.user.email) : false);
+    res.redirect('/admin');
   }
 );
 
