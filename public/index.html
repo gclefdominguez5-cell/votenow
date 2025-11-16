@@ -19,8 +19,33 @@
     
     html, body {
       height: 100%;
-      background: linear-gradient(135deg, var(--sti-light) 0%, #E8E8E8 100%);
       color: var(--sti-dark);
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    html::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://www.sti.edu/images/2022/fbimages/omnibus.jpg') center/cover;
+      filter: blur(10px);
+      transform: scale(1.1);
+      z-index: -2;
+    }
+    
+    html::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(245, 245, 245, 0.92) 0%, rgba(232, 232, 232, 0.88) 100%);
+      z-index: -1;
     }
     
     .hidden { display: none !important; }
@@ -32,17 +57,34 @@
       justify-content: center;
       min-height: 100vh;
       padding: 20px;
-      background: linear-gradient(135deg, var(--sti-teal) 0%, #156876 100%);
+      background: linear-gradient(135deg, rgba(27, 139, 158, 0.95) 0%, rgba(21, 104, 118, 0.95) 100%);
+      position: relative;
+    }
+    
+    .login-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80') center/cover;
+      filter: blur(12px);
+      transform: scale(1.1);
+      z-index: -1;
     }
     
     .login-card {
-      background: var(--sti-white);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
       padding: 48px 40px;
       border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
       width: 100%;
       max-width: 420px;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
     
     .logo {
@@ -55,6 +97,7 @@
       justify-content: center;
       margin: 0 auto 24px;
       font-size: 36px;
+      box-shadow: 0 8px 24px rgba(212, 164, 24, 0.3);
     }
     
     .login-card h2 {
@@ -116,8 +159,9 @@
     
     /* Top Header Styles */
     .top-header {
-      background: var(--sti-white);
-      border-bottom: 1px solid #E0E0E0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(224, 224, 224, 0.5);
       padding: 12px 0;
       border-radius: 12px;
       margin: 16px;
@@ -154,7 +198,7 @@
     .navbar {
       background: linear-gradient(135deg, var(--sti-gold) 0%, #C49415 100%);
       padding: 16px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
     
     .nav-content {
@@ -249,17 +293,18 @@
     }
     
     .candidate-card {
-      background: var(--sti-white);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
       transition: all 0.3s ease;
       border: 3px solid transparent;
     }
     
     .candidate-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
       border-color: var(--sti-gold);
     }
     
@@ -380,7 +425,8 @@
     }
     
     .results-btn {
-      background: var(--sti-white);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
       border: 3px solid var(--sti-teal);
       color: var(--sti-teal);
       padding: 16px 40px;
@@ -393,13 +439,14 @@
       margin: 0 auto;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
     
     .results-btn:hover {
       background: var(--sti-teal);
       color: var(--sti-white);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(27, 139, 158, 0.3);
+      box-shadow: 0 8px 32px rgba(27, 139, 158, 0.3);
     }
     
     @media (max-width: 768px) {
