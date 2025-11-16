@@ -108,7 +108,13 @@ app.get('/auth/google/callback',
   (req, res) => {
     console.log('User authenticated:', req.user);
     console.log('Is admin?', req.user ? ADMIN_EMAILS.includes(req.user.email) : false);
-    res.redirect('/admin');
+    
+    // Redirect based on admin status
+    if (isAdmin(req.user.email)) {
+      res.redirect('/admin');
+    } else {
+      res.redirect('/');
+    }
   }
 );
 
@@ -301,11 +307,24 @@ app.get('/api/admin/export', requireAdmin, (req, res) => {
 // ============================================
 app.use(express.static('public'));
 
+// Home route - serves voting page for authenticated users, login for non-authenticated
 app.get('/', (req, res) => {
+  if (!req.isAuthenticated()) {
+    // Not logged in, show login page (you might need a separate login.html or use index.html)
+    return res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
+  
+  // User is authenticated - check if admin
+  if (isAdmin(req.user.email)) {
+    return res.redirect('/admin');
+  }
+  
+  // Regular user - show voting page
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/admin', (req, res) => {
+// Admin route - only for authenticated admins
+app.get('/admin', requireAdmin, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
